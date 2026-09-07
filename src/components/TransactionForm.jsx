@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-// 1. Dynamic Categories list
 const BILL_CATEGORIES = [
   'Utilities (Electricity, Water, Net)',
   'Rent & Housing',
@@ -24,15 +23,13 @@ const INCOME_CATEGORIES = [
 export default function TransactionForm({ onAddTransaction }) {
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
-  const [type, setType] = useState('bill'); // 'bill' o 'income'
-  const [category, setCategory] = useState(BILL_CATEGORIES[0]); // Default bill category
+  const [type, setType] = useState('bill'); 
+  const [category, setCategory] = useState(BILL_CATEGORIES[0]); 
   const [dueDate, setDueDate] = useState('');
   const [isPaid, setIsPaid] = useState(false);
 
-  // 2. Handler kapag pinindot ang Bill o Income toggle
   const handleTypeChange = (newType) => {
     setType(newType);
-    // Automatic selection ng unang angkop na category batay sa Type
     if (newType === 'income') {
       setCategory(INCOME_CATEGORIES[0]);
     } else {
@@ -45,10 +42,10 @@ export default function TransactionForm({ onAddTransaction }) {
 
     if (!title || !amount || !dueDate) {
       Swal.fire({
-        title: 'Kulang sa Impormasyon!',
-        text: 'Mangyaring punan ang Title, Amount, at Date bago magpatuloy.',
+        title: 'Missing Information, Your Highness!',
+        text: 'Looks like you’re being lazy again. Please complete all required fields..',
         icon: 'warning',
-        confirmButtonText: 'Naintindihan',
+        confirmButtonText: 'Confirm',
         confirmButtonColor: '#10b981',
         background: '#1e293b',
         color: '#f8fafc',
@@ -70,12 +67,12 @@ export default function TransactionForm({ onAddTransaction }) {
 
     Swal.fire({
       icon: 'success',
-      title: 'Naidagdag na!',
+      title: 'Transaction Added Successfully!',
       text: `${type === 'bill' ? 'Bill' : 'Income'} entry recorded successfully.`,
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 2000,
+      timer: 3000,
       timerProgressBar: true,
       background: '#1e293b',
       color: '#f8fafc',
@@ -200,7 +197,7 @@ export default function TransactionForm({ onAddTransaction }) {
               />
             </div>
 
-            {/* Paid Checkbox (Lumalabas lang kung Bill) */}
+            {/* Paid Checkbox */}
             {type === 'bill' && (
               <div className="flex items-center gap-2.5 mt-4 sm:mt-5 bg-slate-900/50 px-3 py-1.5 rounded-xl border border-slate-700/50">
                 <input

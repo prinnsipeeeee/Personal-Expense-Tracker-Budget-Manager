@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function TransactionList({ transactions = [], onTogglePaid, onDeleteTransaction }) {
-  // State para sa Filter (All, Bills, Income, Pending, Paid)
   const [filter, setFilter] = useState('all');
 
-  // Helper para sa currency formatting
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-PH', {
       style: 'currency',
@@ -14,7 +12,6 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
     }).format(amount);
   };
 
-  // Filter Logic
   const filteredTransactions = transactions.filter((item) => {
     if (filter === 'bill') return item.type === 'bill';
     if (filter === 'income') return item.type === 'income';
@@ -23,17 +20,16 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
     return true; // 'all'
   });
 
-  // Delete Confirmation Alert
   const handleDeleteClick = (id, title) => {
     Swal.fire({
-      title: 'Sigurado ka ba?',
-      text: `Buburahin mo na ang "${title}"?`,
+      title: 'Are you sure?',
+      text: `Are you sure you want to delete "${title}"? This action cannot be undone.`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#ef4444', // Red
-      cancelButtonColor: '#64748b',  // Slate
-      confirmButtonText: 'Oo, Burahin',
-      cancelButtonText: 'Kanselahin',
+      confirmButtonColor: '#ef4444', 
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel',
       background: '#1e293b',
       color: '#f8fafc',
     }).then((result) => {
@@ -41,7 +37,7 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
         onDeleteTransaction(id);
         Swal.fire({
           icon: 'success',
-          title: 'Nabura na!',
+          title: 'Transaction Deleted Successfully',
           toast: true,
           position: 'top-end',
           showConfirmButton: false,
@@ -96,10 +92,9 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
         {/* Empty State */}
         {filteredTransactions.length === 0 ? (
           <div className="text-center py-12 text-slate-500">
-            <p className="text-sm font-medium">Walang nahanap na transaction sa filter na ito.</p>
+            <p className="text-sm font-medium">Walang Transaction Oma ko, Hinahanap mo jan.</p>
           </div>
         ) : (
-          /* Transaction Cards List */
           <div className="space-y-3">
             {filteredTransactions.map((item) => {
               const isBill = item.type === 'bill';
@@ -148,7 +143,6 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
 
                     {/* Actions */}
                     <div className="flex items-center gap-2">
-                      {/* Mark as Paid / Unpaid Button (Kung Bill) */}
                       {isBill && (
                         <button
                           onClick={() => onTogglePaid(item.id)}

@@ -13,14 +13,12 @@ function App() {
     setTransactions(loadedData);
   }, []);
 
-  // 1. Magdagdag ng bagong transaction
   const handleAddTransaction = (newTransaction) => {
     const updatedList = [newTransaction, ...transactions];
     setTransactions(updatedList);
     saveStoredTransactions(updatedList);
   };
 
-  // 2. I-toggle ang Bill status (Pending <-> Paid)
   const handleTogglePaid = (id) => {
     const updatedList = transactions.map((item) => {
       if (item.id === id) {
@@ -31,8 +29,7 @@ function App() {
     setTransactions(updatedList);
     saveStoredTransactions(updatedList);
   };
-
-  // 3. Magbura ng transaction (Delete)
+  
   const handleDeleteTransaction = (id) => {
     const updatedList = transactions.filter((item) => item.id !== id);
     setTransactions(updatedList);

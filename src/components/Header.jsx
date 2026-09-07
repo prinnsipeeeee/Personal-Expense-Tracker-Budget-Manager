@@ -11,9 +11,9 @@ export default function Header() {
                     </div>
                     <div>
                         <h1 className="text-xl font-bold text-white tracking-wide">
-                            ExpenseTracker<span className="text-emerald-400">.pwa</span>
+                            MoneyMap<span className="text-emerald-400"></span>
                         </h1>
-                        <p className="text-xs text-slate-400">Personal Budget & Bills Manager</p>
+                        <p className="text-xs text-slate-400">Personal Finance Tracker</p>
                     </div>
                 </div>
 
