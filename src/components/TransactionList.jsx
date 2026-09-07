@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-export default function TransactionList({ transactions = [], onTogglePaid, onDeleteTransaction }) {
+export default function TransactionList({ transactions = [], onTogglePaid, onDeleteTransaction, onEditTransaction, }) {
   const [filter, setFilter] = useState('all');
 
   const formatCurrency = (amount) => {
@@ -19,6 +19,66 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
     if (filter === 'paid') return item.type === 'bill' && item.isPaid;
     return true; // 'all'
   });
+
+  const handleEditClick = (item) => {
+    Swal.fire({
+      title: '✏️ Edit Transaction',
+      html:`
+      <div style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <label style="font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Title / Description</label>
+            <input id="swal-edit-title" class="swal2-input" value="${item.title}" style="margin: 4px 0 0 0; width: 100%; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; font-size: 14px; padding: 10px;">
+          </div>
+          <div>
+            <label style="font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Amount (₱)</label>
+            <input id="swal-edit-amount" type="number" step="0.01" class="swal2-input" value="${item.amount}" style="margin: 4px 0 0 0; width: 100%; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; font-size: 14px; padding: 10px;">
+          </div>
+          <div>
+            <label style="font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Due / Target Date</label>
+            <input id="swal-edit-date" type="date" class="swal2-input" value="${item.dueDate}" style="margin: 4px 0 0 0; width: 100%; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; font-size: 14px; padding: 10px;">
+          </div>
+        </div>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Save Changes',
+      confirmButtonColor: '#10b981',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor: '#64748b',
+      background: '#1e293b',
+      color: '#f8fafc',
+      preConfirm: () => {
+        const title = document.getElementById('swal-edit-title').value;
+        const amount = document.getElementById('swal-edit-amount').value;
+        const dueDate = document.getElementById('swal-edit-date').value;
+        if (!title || !amount || !dueDate) {
+          Swal.showValidationMessage('Pakipuno ang lahat ng fields!');
+          return false;
+        }
+        return {
+          ...item,
+          title,
+          amount: parseFloat(amount),
+          dueDate,
+        };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onEditTransaction(result.value);
+        Swal.fire({
+          icon: 'success',
+          title: 'Update Successful',
+          text: 'Your changes have been successfully saved.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          background: '#1e293b',
+          color: '#f8fafc',
+        });
+      }
+    });
+  };
 
   const handleDeleteClick = (id, title) => {
     Swal.fire({
@@ -155,6 +215,15 @@ export default function TransactionList({ transactions = [], onTogglePaid, onDel
                           {item.isPaid ? '✓ Paid' : '⏳ Mark Paid'}
                         </button>
                       )}
+
+                      {/* Edit Button */}
+                      <button 
+                      onClick={() => handleEditClick(item)}
+                      className="b-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors cursor-pointer"
+                      title='Edit Transaction'
+                      >
+                        ✏️
+                      </button>
 
                       {/* Delete Button */}
                       <button

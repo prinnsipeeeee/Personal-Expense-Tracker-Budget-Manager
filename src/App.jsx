@@ -36,6 +36,14 @@ function App() {
     saveStoredTransactions(updatedList);
   };
 
+  const handleEditTransaction = (updatedItem) => {
+    const updatedList = transactions.map((item) => 
+      item.id === updatedItem.id ? updatedItem : item
+    );
+    setTransactions(updatedList);
+    saveStoredTransactions(updatedList);
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 font-sans pb-12">
       <Header />
@@ -45,6 +53,7 @@ function App() {
         transactions={transactions}
         onTogglePaid={handleTogglePaid}
         onDeleteTransaction={handleDeleteTransaction}
+        onEditTransaction={handleEditTransaction}
       />
     </div>
   );
